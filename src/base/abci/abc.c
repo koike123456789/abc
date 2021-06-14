@@ -45125,17 +45125,20 @@ usage:
 ***********************************************************************/
 int Abc_CommandAbc9GenQbf( Abc_Frame_t * pAbc, int argc, char ** argv )
 {
-    extern Gia_Man_t * Gia_GenQbfMiter( Gia_Man_t * pGia, int nFrames, int nLutNum, int nLutSize, char * pStr, int fUseOut, int fVerbose );
+    extern Gia_Man_t * Gia_GenQbfMiter( Gia_Man_t * pGia, int nFrames, int nLutNum, int nLutSize, char * pStr, int fUseOut, int fUseMUXnet, int fVerbose );
     int nFrames   =    1;
     int nLutNum   =    1;
     int nLutSize  =    6;
     char * pStr   = NULL;
     int fUseOut   =    0;
     int fVerbose  =    0;
+
+    int fuseMUXnet =   0;
+
     int c;
     Gia_Man_t * pTemp;
     Extra_UtilGetoptReset();
-    while ( ( c = Extra_UtilGetopt( argc, argv, "FKNSovh" ) ) != EOF )
+    while ( ( c = Extra_UtilGetopt( argc, argv, "FKNSmovh" ) ) != EOF )
     {
         switch ( c )
         {
@@ -45183,6 +45186,9 @@ int Abc_CommandAbc9GenQbf( Abc_Frame_t * pAbc, int argc, char ** argv )
             if ( pStr == NULL )
                 goto usage;
             break;
+        case 'm':
+            fuseMUXnet ^= 1;
+            break;
         case 'o':
             fUseOut ^= 1;
             break;
@@ -45215,7 +45221,7 @@ int Abc_CommandAbc9GenQbf( Abc_Frame_t * pAbc, int argc, char ** argv )
         Abc_Print( -1, "Currently this commands works for one frame and one LUT.\n" );
         return 1;
     }
-    pTemp = Gia_GenQbfMiter( pAbc->pGia, nFrames, nLutNum, nLutSize, pStr, fUseOut, fVerbose );
+    pTemp = Gia_GenQbfMiter( pAbc->pGia, nFrames, nLutNum, nLutSize, pStr, fUseOut, fuseMUXnet, fVerbose );
     Abc_FrameUpdateGia( pAbc, pTemp );
     ABC_FREE( pStr );
     return 0;
@@ -45228,6 +45234,7 @@ usage:
     Abc_Print( -2, "\t-N num : the number of LUTs [default = %d]\n", nLutNum );
     Abc_Print( -2, "\t-o     : toggle using the last output [default = %s]\n", fUseOut? "yes": "no" );
     Abc_Print( -2, "\t-v     : toggle verbose output [default = %s]\n", fVerbose? "yes": "no" );
+    Abc_Print( -2, "\t-m     : toggle using MUX network in front of LUT [default = %s]\n", fuseMUXnet? "yes": "no" );
     Abc_Print( -2, "\t-h     : print the command usage\n");
     return 1;
 }

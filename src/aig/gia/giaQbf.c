@@ -133,8 +133,10 @@ Vec_Int_t * Gia_GenCreateMuxes( Gia_Man_t * p, Gia_Man_t * pNew, Vec_Int_t * vFl
     }
     return vLits;
 }
-Gia_Man_t * Gia_GenQbfMiter( Gia_Man_t * p, int nFrames, int nLutNum, int nLutSize, char * pStr, int fUseOut, int fVerbose )
-{
+Gia_Man_t * Gia_GenQbfMiter( Gia_Man_t * p, int nFrames, int nLutNum, int nLutSize, char * pStr, int fUseOut, int fUseMUXnet, int fVerbose )
+{   
+    if(fUseMUXnet){Abc_Print(-2,"Using MUX network by optional -m\n");}
+
     Gia_Obj_t * pObj; 
     Gia_Man_t * pTemp, * pNew;
     int i, iMiter, iLut0, iLut1, nPars = nLutNum * (1 << nLutSize);
